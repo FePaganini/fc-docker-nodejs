@@ -1,0 +1,46 @@
+version: '3'
+services:
+  nodejs-app:
+    build: 
+      context: ./nodejs
+    image: fepaganini/fc-nodejs-challenge
+    container_name: node-js-app
+    tty: true
+    depends_on:
+      - mysql-database
+    networks:
+      - fc-node-challenge
+    volumes:
+      - ./nodejs/index.js:/usr/src/app/index.js
+    restart: always
+  
+  mysql-database:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: mysql-database
+    restart: always
+    tty: true
+    volumes:
+      - ./mysql/configs:/var/lib/mysql
+      - ./mysql/scripts:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=nodedb
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - fc-node-challenge
+    
+  nginx:
+    build:
+      context: ./nginx
+    image: fepaganini/fc-nginx-challenge
+    container_name: nginx
+    restart: always
+    ports:
+      - "8080:80"
+    networks:
+      - fc-node-challenge
+
+networks:
+  fc-node-challenge:
+    driver: bridge
+  
