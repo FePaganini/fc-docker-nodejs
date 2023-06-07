@@ -6,6 +6,7 @@ services:
     image: fepaganini/fc-nodejs-challenge
     container_name: node-js-app
     tty: true
+    entrypoint: wait-for mysql-database:3306 -- node index.js
     depends_on:
       - mysql-database
     networks:
