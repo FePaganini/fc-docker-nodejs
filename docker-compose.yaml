@@ -29,7 +29,7 @@ services:
       - MYSQL_ROOT_PASSWORD=root
     networks:
       - fc-node-challenge
-    
+
   nginx:
     build:
       context: ./nginx
@@ -40,6 +40,8 @@ services:
       - "8080:80"
     networks:
       - fc-node-challenge
+    depends_on:
+      - nodejs-app
 
 networks:
   fc-node-challenge:
